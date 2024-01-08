@@ -8,10 +8,6 @@ permissions:
 jobs:
   RunTests:
 
-    strategy:
-      matrix:
-        python-version: [ "3.9", "3.10", "3.11", "3.12" ]
-
     runs-on: ubuntu-latest
     container:
       image: verilator/verilator:v5.018
@@ -19,27 +15,7 @@ jobs:
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v4
-    - name: Print Verilator version
+    - name: Print CPU Number
       run: |
-        verilator --version
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Poetry
-      run: |
-        python3 -m pip install poetry
-    - name: Set up Poetry
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.10"
-        cache: 'poetry'
-        cache-dependency-path: poetry.lock
-    - name: Install dependencies
-      run: |
-        poetry install --no-interaction  --with=dev
-    - name: Run Pytest
-      env:
-        pytest_github_report: true
-      run: |
-        poetry run pytest -n auto tests
+        nproc
+        lscpu
